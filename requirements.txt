@@ -1,0 +1,21 @@
+# db
+aiosqlite
+
+# discord
+disnake>=2.11
+
+# code management / settings
+pre-commit
+pydantic-settings
+
+# remove annoying warning
+PyNaCl
+
+# datetime handling
+python-dateutil
+
+# settings handling
+python-dotenv
+
+# logging
+rich
