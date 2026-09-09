@@ -119,6 +119,13 @@ class QualifiedNameFilter(logging.Filter):
         return True
 
 
+class APSchedulerFilter(logging.Filter):
+    def filter(self, record: logging.LogRecord) -> bool:
+        return not record.getMessage().startswith(
+            "Adding job tentatively"
+        )
+
+
 class FieldRichHandler(RichHandler):
     def render_message(self, record: logging.LogRecord, message: str):
         fields = getattr(record, "fields", None)
@@ -163,6 +170,8 @@ def setup_logging(
     asyncio_level: int = logging.WARNING,
     aiosqlite_level: int = logging.WARNING,
     pil_level: int = logging.WARNING,
+    apscheduler_level: int = logging.WARNING,
+    tzlocal_level: int = logging.WARNING,
     rich_tracebacks: bool = True,
 ) -> None:
     os.makedirs(log_file_path.parent, exist_ok=True)
@@ -198,6 +207,7 @@ def setup_logging(
 
     stdout_handler.setLevel(level)
     stdout_handler.addFilter(QualifiedNameFilter())
+    stdout_handler.addFilter(APSchedulerFilter())
 
     file_handler = TimedRotatingFileHandler(
         log_file_path,
@@ -212,6 +222,7 @@ def setup_logging(
         FieldsFormatter(fmt="%(asctime)s [%(levelname)s] %(qualname)s: %(message)s", datefmt="%Y-%m-%d %H:%M:%S")
     )
     file_handler.addFilter(QualifiedNameFilter())
+    file_handler.addFilter(APSchedulerFilter())
 
     root.addHandler(stdout_handler)
     root.addHandler(file_handler)
@@ -224,6 +235,8 @@ def setup_logging(
     logging.getLogger("aiosqlite").setLevel(aiosqlite_level)
     logging.getLogger("PIL").setLevel(pil_level)
     logging.getLogger("PIL.PngImagePlugin").setLevel(pil_level)
+    logging.getLogger("apscheduler").setLevel(apscheduler_level)
+    logging.getLogger("tzlocal").setLevel(tzlocal_level)
 
 
 def get_log(name: str) -> Log:

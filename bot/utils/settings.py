@@ -24,14 +24,19 @@ class SettingsManager(BaseSettings):
         if p.is_dir() and (p / "__init__.py").exists()
     ])
     bot_enabled_cogs: list[str] = Field(default_factory=list)
+    
+    mods_role: int = Field(default_factory=int)
 
     birthday_tools_enabled: bool = Field(default=True)
 
     birthday_role: int = Field(default_factory=int)
     birthday_announce_channel: int | None = Field(default=None)
     
-    birthday_role_check_frequency_minutes: int = Field(20)
-    birthday_announce_embed_frequency_minutes: int = Field(20)
+    birthday_role_assign_checks_task_frequency_cron_minutes: str = Field("0")
+    birthday_role_assign_checks_task_frequency_cron_hours: str = Field("*")
+    birthday_embed_announcement_task_frequency_cron_minutes: str = Field("0")
+    birthday_embed_announcement_task_frequency_cron_hours: str = Field("*")
+    birthday_embed_announcement_peruser_cooldown_hours: int = Field(6)
     birthday_announce_embed_image_url: str | None = Field(default=None)
     birthday_announce_embed_author_icon_url: str | None = Field(default=None)
     birthday_announce_embed_author_name: str | None = Field(default=None)

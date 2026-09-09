@@ -9,3 +9,5 @@ class Birthday:
     guild_id: int
     month: int
     day: int
+    timezone: str
+    last_announcement_at: int | None = None
